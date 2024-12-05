@@ -1,0 +1,43 @@
+name: Test V3
+
+on:
+  schedule:
+    - cron: "0 */5 * * *" # Runs every 5 hours
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  test-core-and-adapter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up environment
+        run: |
+          RANDOM_NUMBER=$((1000 + RANDOM % 2001))
+          echo "RANDOM_NUMBER=$RANDOM_NUMBER" >> $GITHUB_ENV
+          echo "Number of iterations: $RANDOM_NUMBER"
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install packages
+        run: |
+          for i in $(seq 1 $RANDOM_NUMBER)
+          do
+            echo "Running iteration $i of $RANDOM_NUMBER"
+            PACKAGES=(
+              "@expressots/core@latest"
+              "@expressots/adapter-express@latest"
+              "@expressots/shared@latest"
+              "@expressots/cli@latest"
+            )
+            for package in "${PACKAGES[@]}"
+            do
+              npm install -g $package
+              sleep $((1 + RANDOM % 5)) # Random sleep between 1-5 seconds
+            done
+          done
