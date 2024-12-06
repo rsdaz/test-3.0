@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Set up environment
         run: |
-          RANDOM_NUMBER=$((1000 + RANDOM % 1001))
+          RANDOM_NUMBER=$((100 + RANDOM % 501))
           echo "RANDOM_NUMBER=$RANDOM_NUMBER" >> $GITHUB_ENV
           echo "Number of iterations: $RANDOM_NUMBER"
 
